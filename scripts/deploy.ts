@@ -1,6 +1,14 @@
+import '@nomiclabs/hardhat-ethers';
 import { ethers } from "hardhat";
 
 async function main() {
+  const CBI = await ethers.getContractFactory("CBI");
+  const cbi = await CBI.deploy("CBI", "CUIT");
+
+  await cbi.deployed();
+
+  console.log(`CBI deployed to ${cbi.address}`);
+
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
   const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
