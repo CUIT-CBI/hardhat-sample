@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./ERC721.sol";
 
 contract NFT is ERC721 {
     uint256 internal totalSupplies;
     mapping(uint256 => uint256) public indexToTokenId;
-    mapping(address => uint256[]) public addressIndexToTokenId;
+    mapping(address => uint256[]) public ownerIndexToTokenId;
     // 此处为了与默认值0区分开来,故index从1开始,若为0说明未被mint
     mapping(uint256 => uint256) public tokenIdToIndex;
 
@@ -18,9 +18,9 @@ contract NFT is ERC721 {
         super._mint(account, tokenId);
         // 总供应量
         totalSupplies++;
-        addressIndexToTokenId[account].push(tokenId);
+        ownerIndexToTokenId[account].push(tokenId);
         // index从1开始
-        tokenIdToIndex[tokenId] = addressIndexToTokenId[account].length;
+        tokenIdToIndex[tokenId] = ownerIndexToTokenId[account].length;
         // 全局tokenId
         indexToTokenId[totalSupplies] = tokenId;
     }
@@ -36,7 +36,7 @@ contract NFT is ERC721 {
     }
 
     function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256) {
-        uint256[] memory tokens = addressIndexToTokenId[owner];
+        uint256[] memory tokens = ownerIndexToTokenId[owner];
         require(tokens.length > index, "index not have token");
         return tokens[index];
     }
@@ -46,7 +46,7 @@ contract NFT is ERC721 {
     }
 
     function removeList(uint256 tokenId) internal {
-        uint256[] storage tokens = addressIndexToTokenId[msg.sender];
+        uint256[] storage tokens = ownerIndexToTokenId[msg.sender];
         // 更新数组下标
         tokenIdToIndex[tokens[tokens.length - 1]] = tokenIdToIndex[tokenId];
         // 更新用户index下的tokenId数组
