@@ -19,11 +19,11 @@ contract NFT is ERC721 {
     function mint(address account, uint256 tokenId) external {
         require(tokenId >= 0, "tokenId out of range");
         _mint(account, tokenId);
-        _allTokensIndex[_allTokens.length] = tokenId;
+        _allTokensIndex[tokenId] = _allTokens.length;
         _allTokens.push(tokenId);
 
         uint256 length = ERC721.balanceOf(account);
-        _ownedTokens[msg.sender][length] = tokenId;
+        _ownedTokens[account][length] = tokenId;
         _ownedTokensIndex[tokenId] = length;
     }
 
@@ -45,7 +45,7 @@ contract NFT is ERC721 {
     }
 
     function _removeTokenFromOwnerEnumeration(address from, uint256 tokenId) private {
-        uint256 lastTokenIndex = ERC721.balanceOf(from) - 1;
+        uint256 lastTokenIndex = super.balanceOf(from) - 1;
         uint256 tokenIndex = _ownedTokensIndex[tokenId];
 
         if (tokenIndex != lastTokenIndex) {
@@ -66,13 +66,13 @@ contract NFT is ERC721 {
 
     function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256) {
         // TODO 加分项：根据用户的index，获取tokenId
-        require(index < ERC721.balanceOf(owner), "owner index out of bounds");
+        require(index <= super.balanceOf(owner), "owner index out of bounds");
         return _ownedTokens[owner][index];
     }
 
     function tokenByIndex(uint256 index) external view returns (uint256) {
         // TODO 根据index获取全局的tokenId
         require(index < this.totalSupply(), "global index out of bounds");
-        return _allTokensIndex[index];
+        return _allTokens[index];
     }
 }
