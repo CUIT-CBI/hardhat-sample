@@ -15,6 +15,7 @@ const config: HardhatUserConfig = {
     heco_testnet: {
       url: "https://http-testnet.hecochain.com",
       chainId: 256,
+      accounts : ["0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"]
     },
     heco_mainnet: {
       url: "https://http-mainnet.hecochain.com",
