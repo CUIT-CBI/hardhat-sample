@@ -18,7 +18,8 @@ contract FT is ERC20, Ownable, Pausable {
     function burn(uint256 amount) external {
         _burn(msg.sender, amount);
     }
-
+    
+        // TODO 加分项：实现transfer可以暂停的逻辑
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -36,5 +37,5 @@ contract FT is ERC20, Ownable, Pausable {
         _unpause();
     }
 
-    // TODO 加分项：实现transfer可以暂停的逻辑
+
 }
