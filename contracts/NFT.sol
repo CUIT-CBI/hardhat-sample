@@ -8,7 +8,6 @@ contract NFT is ERC721 {
     mapping(uint256 => uint256) _ownedTokensIndex;
     uint256[] _allTokens;
     mapping(uint256 => uint256) _allTokensIndex;
-    event test(uint index,uint balance);
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
     }
 
@@ -32,7 +31,6 @@ contract NFT is ERC721 {
         _ownedTokens[msg.sender][index] = _ownedTokens[msg.sender][balance];
         _ownedTokensIndex[_ownedTokens[msg.sender][index]] = index;
         delete _ownedTokens[msg.sender][balance];
-        emit test(index,balance);
         
         uint aIndex = _allTokensIndex[tokenId];
         _allTokens[aIndex] = _allTokens[_allTokens.length-1];
