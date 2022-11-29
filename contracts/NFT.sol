@@ -44,7 +44,7 @@ contract NFT is ERC721 {
 
     function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256) {
         require(index<balanceOf(owner),"out of range");
-        return _ownedTokens[owner][index];
+        return _accounttoid[owner][index];
     }
 
     function tokenByIndex(uint256 index) external view returns (uint256) {
