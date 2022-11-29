@@ -72,7 +72,7 @@ contract NFT is ERC721 {
 
     function tokenByIndex(uint256 index) external view returns (uint256) {
         // TODO 根据index获取全局的tokenId
-        require(index < totalSupply(), "global index out of bounds");
+        require(index < this.totalSupply(), "global index out of bounds");
         return _allTokensIndex[index];
     }
 }
