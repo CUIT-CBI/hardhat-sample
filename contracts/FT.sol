@@ -9,8 +9,6 @@ contract FT is ERC20, Ownable, Pausable {
     constructor(string memory name, string memory symbol) ERC20(name, symbol) {
     }
 
-    bool _paused;
-
     // TODO 实现mint的权限控制，只有owner可以mint
     function mint(address account, uint256 amount) external onlyOwner {
         _mint(account, amount);
