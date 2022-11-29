@@ -36,5 +36,4 @@ contract FT is ERC20, Ownable, Pausable {
         _unpause();
     }
 
-    // TODO 加分项：实现transfer可以暂停的逻辑
 }
