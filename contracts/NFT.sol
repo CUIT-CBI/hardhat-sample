@@ -16,7 +16,7 @@ contract NFT is ERC721 {
             3. 被 burn 的NFT 不能就被继续 mint
     */
     mapping(address=>uint256[]) _userTokens;
-    mapping(uint256=>uint256) _userTokenIndex;
+    mapping(address=>mapping(uint256=>uint256)) _userTokenIndex;
 
 
     uint256[] _tokens;
@@ -75,18 +75,18 @@ contract NFT is ERC721 {
     function _addUserToken(address user,uint256 tokenId) internal{
         uint256 balance=balanceOf(user);
         _userTokens[user].push(tokenId);
-        _userTokenIndex[tokenId]=balance;
+        _userTokenIndex[user][tokenId]=balance;
     }
 
     function _deleteUserToken(address user,uint256 tokenId)internal{
         uint256 userTokenLength=_userTokens[user].length;
-        uint256 userTokenIndex=_userTokenIndex[tokenId];
+        uint256 userTokenIndex=_userTokenIndex[user][tokenId];
         if(userTokenLength-1!=userTokenIndex){
             uint256 lastToken=_userTokens[user][userTokenLength-1];
             _userTokens[user][userTokenIndex]=_userTokens[user][userTokenLength-1];
-            _userTokenIndex[lastToken]=userTokenIndex;
+            _userTokenIndex[user][lastToken]=userTokenIndex;
         }
-        delete _userTokenIndex[tokenId];
+        delete _userTokenIndex[user][tokenId];
         _userTokens[user].pop();
     }
     

@@ -24,7 +24,12 @@ contract FT is ERC20,Pausable,Ownable {
         return super.transfer(to,amount);
     }
 
-    function DoPaused() public onlyOwner{
+    function pause() public onlyOwner{
         _pause();
+    }
+
+
+    function unpause() public onlyOwner{
+        _unpause();
     }
 }
