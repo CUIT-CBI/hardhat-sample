@@ -1,21 +1,33 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.4;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./ERC721.sol";
 
-contract FT is ERC20 {
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
+contract ZYX is ERC721 {
+    uint public MAX_LPLS = 10; // 总量
+    address owner;
+    uint tokenId;
+
+    // 构造函数
+    constructor(string memory name_, string memory symbol_)
+        ERC721(name_, symbol_)
+    {
+        owner = msg.sender;
     }
 
-    // TODO 实现mint的权限控制，只有owner可以mint
-    function mint(address account, uint256 amount) external {
-
+    modifier onlyOwner {
+        require(msg.sender == owner,"not owner");
+        _;
     }
 
-    // TODO 用户只能燃烧自己的token
-    function burn(uint256 amount) external {
-
+    function _baseURI() internal pure override returns (string memory) {
+        return "https://voidtech.cn/i/2022/11/21/xsj7xh.jpg";
     }
 
-    // TODO 加分项：实现transfer可以暂停的逻辑
+    // 铸造函数
+    function mint(address to) external onlyOwner {
+        tokenId = tokenId + 1;
+        require(tokenId >= 0 && tokenId < MAX_LPLS, "tokenId out of range");
+        _mint(to, tokenId);
+    }
 }
