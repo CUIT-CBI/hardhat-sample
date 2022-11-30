@@ -16,6 +16,7 @@ contract NFT is ERC721 {
     TotalMint++;
     }
 
+
     function burn(uint256 tokenId) external {
         // TODO 用户只能燃烧自己的NFT
         address owner = ownerOf(tokenId);
