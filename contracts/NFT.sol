@@ -31,7 +31,6 @@ contract NFT is ERC721 {
     function burn(uint256 tokenId) external {
         // TODO 用户只能燃烧自己的NFT
         require(ownerOf(tokenId) == msg.sender,"owner");
-        require(accountTokenIdToIndex[tokenId] != 0,"not");
 
         uint deletoken = accountTokenIdToIndex[tokenId];
         uint lasttoken = balanceOf(msg.sender) - 1;
