@@ -22,9 +22,5 @@ contract FT is ERC20 {
     }
 
     // TODO 加分项：实现transfer可以暂停的逻辑
-    function transfer(address to, uint tokens) public returns (bool success); 
-    balances[msg.sender] = balances[msg.sender].sub(tokens);
-    balances[to] = balances[to].add(tokens);
-    Transfer(msg.sender, to, tokens);
-    return true;
+  
 }
