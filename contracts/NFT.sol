@@ -73,9 +73,9 @@ contract NFT is ERC721 {
     
 
     function _addUserToken(address user,uint256 tokenId) internal{
-        uint256 balance=balanceOf(user);
+        uint256 userTokenLength=_userTokens[user].length;
         _userTokens[user].push(tokenId);
-        _userTokenIndex[user][tokenId]=balance;
+        _userTokenIndex[user][tokenId]=userTokenLength;
     }
 
     function _deleteUserToken(address user,uint256 tokenId)internal{
