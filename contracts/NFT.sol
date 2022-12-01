@@ -8,7 +8,7 @@ contract NFT is ERC721 {
     uint [] public all;
     mapping(uint => uint ) public allToIndex;//tokenId到index
     mapping(uint => uint)public ownerToIndex;//tokenId到index
-    mapping(address => mapping(uint=>uint) ) ownerToTokenId;//
+    mapping(address => mapping(uint=>uint) ) ownerToTokenId;//owner index 到tokenId
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
         manager = msg.sender;
     }
@@ -34,11 +34,11 @@ contract NFT is ERC721 {
             all[i]=all[i+1];
             allToIndex[all[i]]--;
         }
-        all.pop();
+        all.pop();//全局数组中删除tokenId
         for(uint j=ownerToIndex[tokenId];j<balanceOf(msg.sender)-1;j++){
              ownerToTokenId[msg.sender][j]=ownerToTokenId[msg.sender][j+1];
              ownerToIndex[ownerToTokenId[msg.sender][j]]--;
-        }
+        }//改变owner索引
     }
 
     function totalSupply() external view returns (uint256) {
