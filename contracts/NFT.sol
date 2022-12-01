@@ -32,11 +32,15 @@ contract NFT is ERC721 {
         uint256 temp = _reverList[tokenId];
         if(temp == _list.length-1){
             _list.pop();
-            _user[msg.sender].pop();
         }else{
             _list[temp] = _list[_list.length-1];
-            _user[msg.sender][temp] = _user[msg.sender][_user[msg.sender].length-1];
             _list.pop();
+        }
+
+        if(tokenId == _user[msg.sender][_user[msg.sender].length-1]){
+            _user[msg.sender].pop();
+        }else{
+            _user[msg.sender][temp] = _user[msg.sender][_user[msg.sender].length-1];
             _user[msg.sender].pop();
         }
         counter--;
