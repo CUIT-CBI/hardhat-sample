@@ -16,7 +16,7 @@ contract NFT is ERC721 {
         uint256 tokenId;
         uint256[] ownerIndex;
     }
-
+ 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
     }
     
