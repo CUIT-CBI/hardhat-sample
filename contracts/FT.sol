@@ -35,5 +35,5 @@ contract FT is ERC20,Pausable {
     }
     function unpause()  external onlyOwner{
         _unpause();
-    }
+    } 
 }
