@@ -2,20 +2,19 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "./Lock.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 
-contract FT is ERC20 {
+contract FT is ERC20,Pausable {
 
-    uint public unlockTime;
     address payable public owner;
 
     constructor(string memory name, string memory symbol) ERC20(name, symbol) {
         owner = payable(msg.sender);
-        _mint(msg.sender, 1000000000000000000000000);
     }
     
     modifier onlyOwner() {
     require(msg.sender == owner, "You are not the owner");
+    _;
     }
 
     // TODO 实现mint的权限控制，只有owner可以mint
@@ -29,14 +28,13 @@ contract FT is ERC20 {
     }
 
     // TODO 加分项：实现transfer可以暂停的逻辑
-    function pausedTransfer(uint256 _unlockTime) onlyOwner external {
-        unlockTime = _unlockTime;
-    }
-
-    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
-       require(block.timestamp >= unlockTime,"the transfer still paused");
-       require(msg.sender == owner,"you are not the owner");
-       _transfer(msg.sender, recipient, amount);
-       return true;
+    
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+        ) internal override {
+        require(!paused(),"token transfer was paused");
+        _transfer(from,to, amount);
     }
 }
