@@ -10,13 +10,7 @@ contract NFT is ERC721 {
     uint256[] public tokens;
     uint256 _index;
     uint256 _totalSupply;
-
-    struct ownerTokenId{
-        address account;
-        uint256 tokenId;
-        uint256[] ownerIndex;
-    }
- 
+    
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
     }
     
@@ -48,10 +42,7 @@ contract NFT is ERC721 {
         _burn(tokenId);
         _totalSupply --;
     }
-function test() external view returns(uint256){
-    uint256 l = balanceOf(msg.sender);
-    return _allTokenId[l];
-}
+    
     function totalSupply() external view returns (uint256 totalSupply) {
         // TODO 获取总mint的NFT的数量
         return _totalSupply;
