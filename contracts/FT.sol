@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract FT is ERC20 {
+    
     //管理员账户
     address Administrator; 
     bool _setTransfer;
