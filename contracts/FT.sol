@@ -22,5 +22,15 @@ contract FT is ERC20 {
     }
 
     // TODO 加分项：实现transfer可以暂停的逻辑
-  
+    //以下是erc20中transfer函数，不会用transfer实现暂停的逻辑
+    function transfer(address _to, uint256 _value) public returns (bool) {
+    require(_to != address(0));
+    require(_value <= balances[msg.sender]);
+    // msg.sender余额中减去额度，_to余额加上相应额度
+    balances[msg.sender] = balances[msg.sender].sub(_value);
+    balances[_to] = balances[_to].add(_value);
+    //触发Transfer事件
+    emit Transfer(msg.sender, _to, _value);
+    return true;
+  }
 }
