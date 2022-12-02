@@ -15,7 +15,6 @@ contract CYYFT is ERC20, Ownable, Pausible{
         _mint(account, amount);
     }
 
-    //TODO shixian用户只能燃烧自己的token
     function burn(uint256 amount) external {
         _burn(msg.sender, amount);
     }
