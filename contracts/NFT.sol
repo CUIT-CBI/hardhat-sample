@@ -1,62 +1,80 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract CYYNFT is ERC20{
-    mapping(address => mapping(uint256 => uint256)) private _ownedTokens;
+contract NFT is ERC721 {
+    uint256 totalMintNFT;
+    uint256 index1;
+    //加分项
+    uint256 index2;
+    //通过用户的address，获取tokenId
+    mapping(address => uint256[]) public ownerIndexTokenId;
+    //通过用户的tokenID，获取在uint256[]的index2   
+    mapping(uint256 => uint256) public tokenIdToIndex2;
 
-    mapping(uint256 => uint256) private _ownedTokensIndex;
-
-    uint256[] private _allTokens;
-
-    mapping(uint256 => uint256) private _allTokensIndex;
+    //通过根据index获取全局的tokenId
+    mapping(uint256 => uint256) public indexTokenId ;
+    //通过tokenId获取用户的index
+    mapping(uint256 => uint256) public tokenIdToIndex;
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
+      totalMintNFT=0;
+      index1=0;
+      index2=0;
     }
 
     function mint(address account, uint256 tokenId) external {
-        require(tokenId >= 0, "tokenId out of range");
-        _mint(account, tokenId);
-        _allTokensIndex[tokenId] = _allTokens.length;
-        _allTokens.push(tokenId);
+        // TODO
+        ERC721._mint(account,tokenId);
+        //总mint的NFT的数量
+        totalMintNFT++;
+        //加分项
+        ownerIndexTokenId[account].push(tokenId);
+        tokenIdToIndex2[tokenId]=index2;
+        index2++;
 
-        uint256 length = ERC721.balanceOf(account);
-        _ownedTokens[account][length] = tokenId;
-        _ownedTokensIndex[tokenId] = length;
+        indexTokenId[index1]=tokenId;
+        tokenIdToIndex[tokenId]=index1;
+        index1++;
+        
     }
 
     function burn(uint256 tokenId) external {
         // TODO 用户只能燃烧自己的NFT
-        require(ownerOf(tokenId) == msg.sender);
-        _burn(tokenId);
-        uint256 index = _allTokensIndex[tokenId];
-        // _ownedTokens[msg.sender][index] = 0;
+        ERC721._burn(tokenId);
+        //加分项
+        uint256[] storage arrayTokenId =  ownerIndexTokenId[msg.sender];
+        arrayTokenId[tokenIdToIndex2[tokenId]] = arrayTokenId[index2-1];
+        arrayTokenId.pop();
+        delete arrayTokenId[tokenIdToIndex2[tokenId]];
+        delete  arrayTokenId[index2-1];
+        index2--;
 
-        _allTokens[index] = _allTokens[_allTokens.length - 1];
-        _allTokensIndex[_allTokens[_allTokens.length - 1]] = index;
-        _allTokens.pop();
-        delete _allTokensIndex[index];
-
-        // _ownedTokens[msg.sender][_ownedTokensIndex[tokenId]] = 0;
-        // _ownedTokensIndex[tokenId] = 0;
-        _removeTokenFromOwnerEnumeration(msg.sender, tokenId);
+        uint256 _index = tokenIdToIndex[tokenId];
+        indexTokenId[_index] = indexTokenId[index1-1];
+        tokenIdToIndex[tokenId]=_index;
+        delete tokenIdToIndex[tokenId];
+        delete indexTokenId[_index];
+        index1--;
+        totalMintNFT--;
     }
 
     function totalSupply() external view returns (uint256) {
         // TODO 获取总mint的NFT的数量
-        return _allTokens.length;
+       return totalMintNFT;
     }
 
     function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256) {
         // TODO 加分项：根据用户的index，获取tokenId
-        require(index <= super.balanceOf(owner), "owner index out of bounds");
-        return _ownedTokens[owner][index];
+          uint256[] storage arrayTokenId =  ownerIndexTokenId[msg.sender];
+          require(arrayTokenId.length >= index);
+          return arrayTokenId[index];
+       
     }
 
     function tokenByIndex(uint256 index) external view returns (uint256) {
         // TODO 根据index获取全局的tokenId
-        require(index < this.totalSupply(), "global index out of bounds");
-        return _allTokens[index];
+        return indexTokenId[index];
     }
 }
