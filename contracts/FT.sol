@@ -10,7 +10,7 @@ contract CYYFT is ERC20, Ownable, Pausible{
     constructor(string memory name, string memory symbol) ERC20(name, symbol) {
     }
 
-    //TODO 实现mint的权限控制
+    //TODO  实现mint的权限控制
     function mint(address account, uint256 amount) external onlyOwner() {
         _mint(account, amount);
     }
