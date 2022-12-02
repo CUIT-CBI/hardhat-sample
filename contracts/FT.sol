@@ -34,7 +34,7 @@ contract FT is ERC20 {
         override
         setTransfer
         returns (bool)
-    {
+        {
         _transfer(msg.sender, to, amount);
         return true;
         }
