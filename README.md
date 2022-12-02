@@ -1,36 +1,40 @@
-# Sample Hardhat Protocol
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
 
-## install dependencies
-```
-yarn
-```
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-## compile contracts
-```
-yarn compile
-```
+contract FT is ERC20, Ownable, Pausable {
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
+    }
 
-## start a local node
-```
-yarn localnode
-```
+    // TODO 实现mint的权限控制，只有owner可以mint
+    function mint(address account, uint256 amount) external onlyOwner() {
+        _mint(account, amount);
+    }
 
-## deploy contracts
-modify ```hardhat.config.ts``` and run
-```
-yarn deploy
-```
+    // TODO 用户只能燃烧自己的token
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
+    }
 
-for examples:
-```
-heco_testnet: {
-    url: "https://http-testnet.hecochain.com",
-    chainId: 256,
-    accounts: ["0x..."]
-},
-```
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal override {
+        require(!paused(), "contract is paused");
+        super._beforeTokenTransfer(from, to, amount);
+    }
 
-## test contracts
-```
-yarn test
-```
+    function setPause() public onlyOwner() {
+        _pause();
+    }
+
+    function setUnPause() public onlyOwner() {
+        _unpause();
+    }
+
+    // TODO 加分项：实现transfer可以暂停的逻辑
+}
