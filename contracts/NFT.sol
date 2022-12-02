@@ -2,22 +2,51 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-contract Link{
-    tokenNode private header;
-    struct tokenNode {
-        uint256 val;
-        tokenNode nextNode;
-    }
-    function getLinkHeader()public pure returns(tokenNode){
-        return header;
-    }
-    function addNode(tokenNode memory node)public{
-        tokenNode memory temp=header;
-           while(temp.next)
-    } 
-}
+// contract ArrayLink{
+//     tokenNode private header;
+//     tokenNode private tailer;
+//     tokenNode[] private bottomArray;
+//     tokenNode[] private idleNode;
+//     uint256 private lastLength;
+//     struct tokenNode {
+//         uint256 val;
+//         uint256            nextNode;
+//     }
+//     constructor(){
+//         // o index should be abandoned
+//        lastLength=1;
+//     }
+//     function getLinkHeader()public view returns(tokenNode memory){
+//         return header;
+//     }
+//     function Add(tokenNode memory node)public{
+//         if(header.nextNode==0){
+//               header=node;
+//               bottomArray[1]=node;
+//               lastLength=2;
+//               return;
+//         }
+//         if(idleNode)
+//         tokenNode memory temp=header;
+//            for(;true;){
+//               if(temp.nextNode!=0){
+
+//               }                                                                                                                                                                                                                                                                                                                                                                  
+//            }
+//     }
+//     function _SearchTargetElement(tokenNode memory node)internal returns(uint256){
+           
+//     }
+//     function Delete(tokenNode  memory node)external{
+
+//     }
+//     function Delete(uint256 index)external{
+
+//     }
+// }
 contract NFT is ERC721 {
     uint256 private totalSupplyNumber;
+    mapping(address=>mapping(uint256=>uint256)) private userTokenOwner;
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
     }
 
@@ -29,13 +58,16 @@ contract NFT is ERC721 {
      function _beforeTokenTransfer(
         address from,
         address to,
-        uint256, /* firstTokenId */
+        uint256 tokenId, /* firstTokenId */
         uint256 batchSize
     ) internal override {
         super._beforeTokenTransfer(from,to,0,batchSize);
-        if(from==address(0)){
+        if(from==address(this)){
             totalSupplyNumber=totalSupplyNumber++;
         }
+        mapping(uint256=>uint256) memory tempUserToken=userTokenOwner[];
+        uint256 memory index;
+        while(tempUserToken[])
     }
 
     function burn(uint256 tokenId) external {
