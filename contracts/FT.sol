@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
 
-contract CYYNT is ERC20, Ownable, Pausible{
+contract CYYFT is ERC20, Ownable, Pausible{
     constructor(string memory name, string memory symbol) ERC20(name, symbol) {
     }
 
