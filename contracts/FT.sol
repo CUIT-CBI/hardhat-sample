@@ -2,38 +2,55 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-
-
-contract CYYFT is ERC20, Ownable, Pausible{
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
+import "@openzeppelin/contracts/access/Ownable.sol";
+contract FT is ERC20, Pausable,Ownable {
+    mapping(address => uint256)balance;
+    uint256 _totalSupply;
+    constructor(string memory name, string memory symbol) ERC20(name, symbol)  {
+          
     }
 
-    //TODO 实现mint的权限控制
-    function mint(address account, uint256 amount) external onlyOwner() {
-        _mint(account, amount);
+    // TODO 实现mint的权限控制，只有owner可以mint
+    function mint(address account, uint256 amount) external onlyOwner{
+        balance[account]+=amount;
+        _totalSupply +=amount;
+    }
+    function balanceOf(address account) public view virtual override returns (uint256) {
+        return balance[account];
     }
 
-    //TODO shixian用户只能燃烧自己的token
+    // // TODO 用户只能燃烧自己的token
     function burn(uint256 amount) external {
-        _burn(msg.sender, amount);
+    require(balance[msg.sender] >=amount);
+    balance[msg.sender]-=amount;
+    _totalSupply-=amount;
+    
+    }
+    function totalSupply() public view virtual override returns (uint256) {
+        return _totalSupply;
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal override {
-        require(!paused(), "contract is paused");
-        super._beforeTokenTransfer(from, to, amount);
-    }
-
-    function setPause() public onlyOwner() {
+    //TODO 加分项：实现transfer可以暂停的逻辑
+    function pause() public onlyOwner {
         _pause();
     }
 
-    function setUnPause() public onlyOwner() {
+    function unpause() public onlyOwner {
         _unpause();
+    }
+
+    function _beforeTokenTransfer(address from, address to, uint256 amount)
+        internal
+        whenNotPaused
+        override
+    {
+        require(from == msg.sender);
+        balance[from]-=amount;
+        balance[to] += amount;
+        super._beforeTokenTransfer(from, to, amount);
+    }
+    function transfer(address from,address to,uint256 amount)external {
+        _beforeTokenTransfer(from,to,amount);
     }
 }
