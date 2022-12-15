@@ -13,7 +13,7 @@ describe("FT", function () {
   async function deployFT() {
     // Contracts are deployed using the first signer/account by default
     const FT = await ethers.getContractFactory("FT");
-    ft = await FT.deploy(name, symbol);
+    const ft = await FT.deploy(name, symbol);
 
     return { ft };
   }
