@@ -38,7 +38,6 @@ contract FT is ERC20 {
         _transfer(_msgSender(), to, amount);
         return true;
     }
-
     function changePause(bool newPause)  public onlyOwner returns(bool) {
         paused = newPause;
         return true;
