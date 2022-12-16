@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract FT is ERC20 {
@@ -27,11 +29,16 @@ contract FT is ERC20 {
         internal virtual override
     {
         super._beforeTokenTransfer(from, to, amount);
-
-        require(_validRecipient(to), "ERC20WithSafeTransfer: invalid recipient");
     }
    
-    function _validRecipient(address to) private view returns (bool) {
-        return (to != address(0));
+    //新增
+    function pause() external onlyOwner {
+        _pause();
     }
+    
+    //新增
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+   
 }

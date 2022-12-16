@@ -29,7 +29,8 @@ contract NFT is ERC721 {
         nfts.push(nftorder);
 
         idOfNFTOrder[tokenId] = nftorder;
-        idToNFTIndex[tokenId] = nfts.length()-1;
+        //更新为最后一个
+        idToNFTIndex[tokenId] = nfts.length - 1;
 
         //ERC721.sol
         _mint(account, tokenId);
@@ -40,12 +41,12 @@ contract NFT is ERC721 {
         //查询
         address _owner = idOfNFTOrder[tokenId].owner;
         require(msg.sender == _owner, "You don't have permission");
-        require(nfts.length() >= 1, "Array out of bounds");
+        require(nfts.length >= 1, "Array out of bounds");
 
         //ERC721.sol
         _burn(tokenId);
         
-        nfts[idToNFTIndex[tokenId]] = nfts.length() - 1;
+        nfts[idToNFTIndex[tokenId]] = nfts[nfts.length - 1];
         //初值
         delete idToNFTIndex[tokenId];
         delete idOfNFTOrder[tokenId];
@@ -53,12 +54,12 @@ contract NFT is ERC721 {
 
     function totalSupply() external view returns (uint256) {
         // TODO 获取总mint的NFT的数量
-        return nfts.length();
+        return nfts.length;
     }
 
     function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256) {
         // TODO 加分项：根据用户的index，获取tokenId
-        require(owner !=address(0), "");
+        require(owner !=address(0), "The address cannot be zero");
         //同样，只有用户自己能查自己的
         if (owner == nfts[index].owner){
             return nfts[index].tokenId; 
