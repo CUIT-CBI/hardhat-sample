@@ -8,8 +8,6 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 contract FT is ERC20, Pausable{
     address public owner;
 
-    bool private _paused = true;
-
     constructor(string memory name, string memory symbol) ERC20(name, symbol) Pausable(){
         owner = msg.sender;
     }
@@ -31,20 +29,18 @@ contract FT is ERC20, Pausable{
         address from,
         address to,
         uint256 amount
-    ) internal virtual override {
-        super._beforeTokenTransfer(from, to, amount);
+    ) internal override {
         require(!paused(), "ERC20Pausable: token transfer while paused");
+        super._beforeTokenTransfer(from, to, amount);
     }
 
-    function pause() public virtual whenNotPaused {
+    function setPause() public {
         require(msg.sender == owner);
-        _paused = true;
-        emit Paused(_msgSender());
+        _pause();
     }
 
-    function unpause() public virtual whenPaused {
+    function setUnpause() public {
         require(msg.sender == owner);
-        _paused = false;
-        emit Unpaused(_msgSender());
+        _unpause();
     }
 }
