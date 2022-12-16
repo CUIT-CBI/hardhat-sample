@@ -42,4 +42,10 @@ contract FT is ERC20 {
         _transfer(owner, to, amount);
         return true;
     }
+    function transferFrom(address _from, address _to, uint256 _amount) public virtual override stopped returns (bool){
+    address _spender = _msgSender();
+    _spendAllowance(_from, _spender, _amount);
+    _transfer(_from, _to, _amount);
+    return true;
+    }
 }
