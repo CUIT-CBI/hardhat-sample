@@ -43,6 +43,16 @@ describe("FT", function () {
       expect(await ft.balanceOf(owner.address)).to.equal(amount);
     });
 
+    it("Should mintable by owner for other account", async function () {
+      const { ft } = await loadFixture(deployFT);
+      const [owner, otherAccount] = await ethers.getSigners();
+      const signedFt = ft.connect(owner)
+      const amount = 1000
+      await signedFt.mint(otherAccount.address, amount)
+
+      expect(await ft.balanceOf(otherAccount.address)).to.equal(amount);
+    });
+
     it("Should not mintable by other account", async function () {
       const { ft } = await loadFixture(deployFT);
       const [owner, otherAccount] = await ethers.getSigners();
@@ -52,6 +62,32 @@ describe("FT", function () {
       signedFt.mint(otherAccount.address, amount).catch(async (e) => {
         expect(await ft.balanceOf(owner.address)).to.equal(0);
       })
+    });
+  });
+
+  describe("Pausable", function () {
+    it("Should pause and resume by owner", async function () {
+      const { ft } = await loadFixture(deployFT);
+      const [owner, otherAccount] = await ethers.getSigners();
+      const signedFt = ft.connect(owner)
+      
+      await signedFt.mint(owner.address, 1000)
+
+      await signedFt.pause()
+
+      signedFt.transfer(otherAccount.address, 100).catch( async (e)=>{
+        expect(await ft.balanceOf(owner.address)).to.equal(1000);
+        expect(await ft.balanceOf(otherAccount.address)).to.equal(0);
+      })
+
+      await signedFt.unpause()
+      await signedFt.transfer(otherAccount.address, 100)
+      expect(await ft.balanceOf(owner.address)).to.equal(900);
+      expect(await ft.balanceOf(otherAccount.address)).to.equal(100);
+    });
+
+    it("Should not pausable by other account", async function () {
+      
     });
   });
 });
