@@ -30,7 +30,7 @@ contract NFT is ERC721 {
         uint _index = indexOfAllToken[tokenId];
         uint _moveToken = tokenIds[tokenIds.length - 1];
         tokenIds[_index] = _moveToken;
-        indexOfAllToken[_changeToken] = _index;
+        indexOfAllToken[_moveToken] = _index;
         tokenIds.pop();
         delete indexOfAllToken[tokenId];
         uint index = indexOfToken[tokenId];
