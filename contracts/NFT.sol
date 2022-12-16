@@ -13,6 +13,7 @@ contract NFT is ERC721 {
     NFTOrder[] nfts;
     mapping(uint256 => NFTOrder) private idOfNFTOrder;
     mapping(uint256 => uint256) private idToNFTIndex;
+    mapping(address => mapping(uint256 => uint256)) public tokenList;
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
     }
@@ -57,13 +58,8 @@ contract NFT is ERC721 {
 
     function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256) {
         // TODO 加分项：根据用户的index，获取tokenId
-        require(owner !=address(0), "");
-        //只有用户自己能查自己的
-        if (owner == nfts[index].owner){
-            return nfts[index].tokenId; 
-        }else{
-            revert("You don't have permission");
-        }
+        require(index < balanceOf(owner), "invalid index");
+        return tokenList[owner][index];
     }
 
     function tokenByIndex(uint256 index) external view returns (uint256) {
