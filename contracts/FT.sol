@@ -11,7 +11,7 @@ contract FT is ERC20,Pausable {
 
     // TODO 实现mint的权限控制，只有owner可以mint
     modifier OnlyOwner() {
-        require(msg.sender == owner);
+        require(msg.sender == owner,"You're not owner");
         _;
     }
 
@@ -35,5 +35,6 @@ contract FT is ERC20,Pausable {
 
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal override {
         require(!paused(),"token transfer is paused!");
+        super._beforeTokenTransfer(from, to, amount);
     }
 }
