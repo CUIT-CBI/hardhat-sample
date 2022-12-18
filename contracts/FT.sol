@@ -7,12 +7,15 @@ contract FT is ERC20,Pausable {
     //默认internal修饰owner
     address owner;
     constructor(string memory name, string memory symbol) ERC20(name, symbol) {
-        owner=msg.sender;
+    owner=msg.sender;
     }
+    modifier onlyOwner() {
+      require(msg.sender == owner);
+      _;
+}
 
     // TODO 实现mint的权限控制，只有owner可以mint
-    function mint(address account, uint256 amount) external {
-       require(account == msg.sender , "You are not the owner");
+    function mint(address account, uint256 amount) external onlyOwner {
         _mint(account,amount);
     }
 
@@ -20,9 +23,13 @@ contract FT is ERC20,Pausable {
     function burn(uint256 amount) external {
        _burn(msg.sender,amount);
     }
-    //function transfer 
+     
     // TODO 加分项：实现transfer可以暂停的逻辑
-  function transfer(address to, uint256 amount) public override returns (bool) {
+    //function _beforeTokenTransfer是ecr20合约中的抽象函数，但为何要重写后再次调用呢？
+    // function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual override whenNotPaused {
+    //     super._beforeTokenTransfer(from, to, amount);
+    // }
+  function transfer(address to, uint256 amount) public override whenNotPaused returns (bool) {
       //先变成true
     //   function _pause() internal virtual whenNotPaused {
     //     _paused = true;
@@ -35,9 +42,14 @@ contract FT is ERC20,Pausable {
     // function paused() public view virtual returns (bool) {
     //     return _paused;
     // }
-        
-        //
-        require(!paused(), "TranSfer is stopping!!!!");
         return super.transfer(to, amount);
+     }
+     //直接终止
+     function pause() external onlyOwner{
+       _pause();
+     }
+     //恢复转账
+     function unpause() external onlyOwner{
+       _unpause();
      }
 }
