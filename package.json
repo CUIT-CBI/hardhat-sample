@@ -4,6 +4,7 @@
     "compile": "npx hardhat compile",
     "localnode": "npx hardhat node",
     "deploy": "npx hardhat run scripts/deploy.ts",
+    "attack": "npx hardhat run scripts/attack.ts",
     "test": "npx hardhat test"
   },
   "dependencies": {
